@@ -1,7 +1,6 @@
 # Observant Systems
 
-**NAMES OF COLLABORATORS HERE**
-
+#### Collaborators: Charlotte Lin (hl2575), Zoe Tseng (yzt2), Le-En Huang (lh764) 
 
 For lab this week, we focus on creating interactive systems that can detect and respond to events or stimuli in the environment of the Pi, like the Boat Detector we mentioned in lecture. 
 Your **observant device** could, for example, count items, find objects, recognize an event or continuously monitor a room.
@@ -102,6 +101,32 @@ Consider how you might use this position based approach to create an interaction
 
 (You might also consider how this notion of percentage control with hand tracking might be used in some of the physical UI you may have experimented with in the last lab, for instance in controlling a servo or rotary encoder.)
 
+### ⭐️Testing MediaPipe
+
+We first tested the “Quiet Coyote” and pinch-based percentage control examples provided in the instructions and both features worked smoothly. 
+
+<img src="https://hackmd.io/_uploads/B1ma9cwk-l.png" height="300"/> <img src="https://hackmd.io/_uploads/SkT0P9P1Ze.png" height="300"/>
+
+After confirming that the MediaPipe hand tracking pipeline functioned correctly, we wrote our own script to extend the interaction by recognizing “good” and “bad” gestures. The system successfully identified thumbs-up and thumbs-down, classifying them as either good or bad with visual on-screen feedback. 
+
+![ScreenRecording2025-11-03at15.43.39111-ezgif.com-optimize](https://hackmd.io/_uploads/rkTXwqL1bx.gif)
+
+**1. When does it do what it is supposed to do?**
+The system works well when the camera has a clear, well-lit view of a single hand within the frame. MediaPipe’s landmark model reliably detects key points when the hand is fully visible, not motion-blurred. Under these conditions, the sense-making algorithm correctly identifies gestures and displays real-time feedback with high FPS and minimal latency.
+
+**2. When and why does it fail?**
+It fails when visibility, lighting, or orientation deviate. For example:
+- Low light or glare reduces landmark confidence and tracking stability.
+- Hand partially out of frame or rotated at an extreme angle (e.g., sideways thumbs-up) can misplace landmarks.
+- Background clutter or similar skin tones can confuse the detector.
+- Fast motion can cause frame-to-frame inconsistency, leading to gesture flicker.
+
+**3. How we modified the system to address these issues**
+To make it more robust, we could:
+- Introduce frame-based averaging (e.g., min_frames = 5) to ensure stable recognition.
+- Integrate environment checks (e.g., detection confidence < 0.5 → display “Adjust lighting”).
+
+
 
 
 #### Moondream Vision-Language Model
@@ -121,6 +146,48 @@ python moondream_simple.py
 This will capture an image from your webcam and let you ask questions about it in natural language. Note that vision-language models are slower than classification models (responses may take up to minutes on a Raspberry Pi). There are newer models like [LFM2-VL](https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF), but many are very recent and not yet optimized for embedded devices.
 
 **Design consideration**: Think about how slower response times change your interaction design. What kinds of observant systems benefit from thoughtful, delayed responses rather than real-time classification? Consider systems that monitor over longer time periods or provide periodic summaries rather than instant feedback.
+
+### ⭐️Testing Moondream
+**1. When does it do what it is supposed to do?**
+
+The system performs as intended when: The webcam captures a clear, well-lit image of a single hand showing a thumbs-up or thumbs-down gesture.
+The background is uncluttered, and the hand is centered in the frame.Under these conditions, Moondream is generally able to interpret the gesture correctly.
+
+**2. When and why does it fail?**
+
+The system fails under several conditions:
+- Camera-level issues: It can be difficult to capture only the hand gesture, especially if the camera position is not ideal.
+- Model-level issues:
+    - The model sometimes fails to interpret the image or produces incomplete responses. For example, hands that are partially out of frame often lead to uncertain classifications.
+ 
+- moondream_error copy
+<img src="https://hackmd.io/_uploads/H11kpsB1Zg.png" height="300"/>
+- The Raspberry Pi occasionally shuts down due to high processing load or memory limits. This could be due to model latency or overload.
+<img src="https://hackmd.io/_uploads/rkTdhiBkWx.png" height="300"/>
+
+**3. Other scenarios that could cause problems**
+Additional sources of error include:
+- Multiple hands or people in the frame, leading to ambiguity about which hand to classify.
+- Unusual camera angles, such as a side view of the thumb, which confuse the model.
+- Non-human hands (e.g., statues, drawings, or printed images) that can lead to misclassification.
+
+**4. Optimizations to the sense-making algorithm**
+- One potential improvement involves refining the prompt design.
+- We experimented with zero-shot classification phrasing, such as:
+```
+“Classify this image into exactly one category: [‘thumbs up’, ‘thumbs down’, ‘none’]. Respond with one of these words only.”
+```
+However, even with simplified prompts, the model frequently returned no output or an empty response (the terminal simply printed “done”).
+This suggests that prompt tuning alone is insufficient to achieve reliable results for this type of visual classification.
+
+**5. How we modified the system to address these issues**
+
+During testing, we found that while Moondream could understand and describe visual scenes, it has high latency and is very likely to misclassification when applied to simple gesture recognition tasks. Because our task involves detecting a specific, well-defined visual pattern, we decided to use lighter, more specialized models that offer faster response times and higher interpretive accuracy.
+
+- **Teachable Machine** allows quick training and deployment of custom gesture classifiers with less latency.
+- **MediaPipe** is more efficient, on-device hand-landmark detection that can reliably infer gestures without requiring cloud inference or text-based reasoning.
+
+We think the interactive system becomes more responsive, deterministic, and robust under real-time conditions if we use the above 2 models instead of `moondream`.
 
 #### Teachable Machines
 Google's [TeachableMachines](https://teachablemachine.withgoogle.com/train) is very useful for prototyping with the capabilities of machine learning. We are using [a python package](https://github.com/MeqdadDev/teachable-machine-lite) with tensorflow lite to simplify the deployment process.
@@ -144,6 +211,17 @@ Next train your own model. Visit [TeachableMachines](https://teachablemachine.wi
 
 Include screenshots of your use of Teachable Machines, and write how you might use this to create your own classifier. Include what different affordances this method brings, compared to the OpenCV or MediaPipe options.
 
+### ⭐️Testing Teachable Machine
+Class 1: Heart emoji
+
+<img src="https://hackmd.io/_uploads/SJxjZjrJWg.png" height="300"/>
+
+Class 2: Thumbs up
+
+<img src="https://hackmd.io/_uploads/ryDi-iHk-l.png" height="300"/>
+
+[Video demo](https://youtu.be/MrGmYIaht3A)
+
 #### (Optional) Legacy audio and computer vision observation approaches
 In an earlier version of this class students experimented with observing through audio cues. Find the material here:
 [Audio_optional/audio.md](Audio_optional/audio.md). 
@@ -159,12 +237,23 @@ In an earlier version of this class students experimented with foundational comp
 * This can be as simple as the boat detector shown in lecture.
 * Try out different interaction outputs and inputs.
 
-
 **\*\*\*Describe and detail the interaction, as well as your experimentation here.\*\*\***
+
+Model: MediaPipe
+Demo video: [link](https://youtu.be/ZWbaBjM_1b8)
+How to run: 
+```
+(.venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 5 $ python balloon.py
+```
+Description: 
+
+A simple Balloon popping game with your finger!
+There are different colors of balloon, try getting as many points as you can without popping the "toxic" balloon with black X on it. 
+
+If you lose all your points, you can always retry for chances of winning more points.
 
 ### Part C
 ### Test the interaction prototype
-
 Now flight test your interactive prototype and **note down your observations**:
 For example:
 1. When does it what it is supposed to do?
@@ -177,6 +266,79 @@ For example:
 1. How bad would they be impacted by a miss classification?
 1. How could change your interactive system to address this?
 1. Are there optimizations you can try to do on your sense-making algorithm.
+
+
+#### Happy Case
+- Works well in consistent, moderate lighting conditions
+- Accurately detects finger position when hand is clearly visible and within 1-2 feet of camera
+- Collision detection is responsive when finger clearly overlaps with balloon
+- Score tracking and balloon respawning work consistently
+
+#### Tricky Case
+- Fails to detect finger when lighting is too dim or too bright
+- **Misses collisions** when finger **moves very quickly** across balloons
+- Blue balloons move so fast that they're difficult to hit, sometimes passing by before system can register collision
+
+#### Failure analysis
+- **Lighting issues**: MediaPipe's hand detection model is trained on well-lit conditions
+- **Latency**: Small delay between hand movement, detection, processing, and collision check
+- **Tracking loss**: MediaPipe temporarily loses hand pointers during fast movements
+
+#### Potential issues
+- Multiple hands in frame could confuse which finger to track
+- Similar skin-toned objects in background might interfere with hand detection
+- Camera angle/position changes would affect calibration
+- Reflective surfaces or windows in background could create false detections
+- User wearing gloves or hand accessories might reduce detection accuracy
+
+---
+<!-- 
+**\*\*\*Think about someone using the system. Describe how you think this will work.\*\*\***
+1. Are they aware of the uncertainties in the system?
+2. How bad would they be impacted by a miss classification?
+3. How could change your interactive system to address this?
+4. Are there optimizations you can try to do on your sense-making algorithm.
+ -->
+ 
+#### 1. Are they aware of the uncertainties in the system?
+Currently, users may not fully understand the system's limitations:
+- No visual/audio feedback when hand tracking is lost
+- No indication when lighting conditions are suboptimal
+- Unclear why some apparent hits don't register
+
+#### 2. How bad would they be impacted by a misclassification?
+This is a gameplay where there are hardly ever harms that users will be experiencing.
+However, there are likely things that will discourage users from playing more:
+- **Missed collision**: Frustrating but minor - user just tries again
+- **False collision**: More problematic - could lose points if it's a toxic balloon (-15 points)
+
+#### 3. How could you change your interactive system to address this?
+
+**Visual Feedback Improvements:**
+- Add visual feedback for successful hits (particle effects, sound)
+- Display "Hand Lost" warning when tracking fails
+- Show collision radius around finger pointer for transparency
+
+**Collision Detection Refinements:**
+- Add confirmation requirement (hold finger on balloon for 0.2s)
+
+**Gameplay Adjustments:**
+- Implement combo system - consecutive hits reward bonus points
+
+#### 4. Are there optimizations you can try on your sense-making algorithm?
+
+**Detection Improvements:**
+- Use multiple hand landmarks (not just fingertip) to improve collision accuracy
+- Add temporal averaging - only register collision if detected for 2+ consecutive frames
+- Dynamically adjust collision radius based on balloon speed
+- Scale difficulty based on user's success rate
+
+**Comprehensive Gameplay Adjustments:**
+- Consider using both index finger AND thumb pinch gesture for more deliberate popping
+- Add gesture controls (e.g., open palm = pause, fist = shield)
+- Implement two-handed mode for advanced players
+
+---
 
 ### Part D
 ### Characterize your own Observant system
@@ -193,8 +355,48 @@ During the lecture, we mentioned questions to help characterize a material:
 
 **\*\*\*Include a short video demonstrating the answers to these questions.\*\*\***
 
+#### Teachable Machine
+| **Question** | **Your Observations** |
+|--------------|----------------------|
+| **What can you use X for?** | Object classification, Gesture classification |
+| **What is a good environment for X?** | Static, controlled, not dynamic, generally where object in question can be placed front and center without a lot of noise. |
+| **What is a bad environment for X?** | People are walking around, more than one objects present, not enough light or too much light - see this [short clip](https://youtu.be/6_ayZN7uc_o) where the light is shadowing some gestures. |
+| **When will X break? How will it break?** | **1. Complexity:** The model works pretty well when there are only two classes - thumbs up and heart emoji. When I added two more classes, thumbs down and ok, the model starts having confusions between different classes. There are some possible explanations of this, one could be that the newly added gestures are more complex in nature. One could also argue having more classes generally adds complexity to the trained model. See this [video](https://youtu.be/DPIkheJOZJA) that shows some of that confusion and less confidence in classifying gestures.<br><br>**2. Data bias:** When I first trained the model, I noticed it worked best when I recorded my gestures front and center, and avoid showing face/clothes or any other background that could add to the confusion. I tried adding *some* pictures in the "ok" gesture class with my face showing and my jacket. See this [video](https://youtu.be/FgUPexjaoDQ) that demonstrates how this will break the model because whenever I gesture with this jacket, no matter what I do, it will automatically be classified as "ok".<br><br>**3. Not enough data:** I noticed when I add a class to the model, if I only recorded my gesture from a certain angle, there is a high chance if I rotate it 90 degrees or hold it at a distance that's closer/further from the camera, it will break the classification. |
+| **What are other properties/behaviors of X?** | **Visual/Sensory affordance:** ![Screenshot 2025-11-02 at 11.21.07 PM (2)](https://hackmd.io/_uploads/SygApjrJZx.png)<br>I discovered there are some emojis/gestures that would trigger an actual emoji visual effect on screen. This is pretty neat.<br><br>**Perceptible affordance:** There is also a nice results visualization section where instant feedback is given to the user interacting with the system. User should be able to learn what works and what doesn't in a natural way. |
+| **How does X feel?** | Teachable Machine feels pleasant, interactive, iterative, and positive. It encourages user to interact with a model, train a model, and adjust it based on feedback. Impressive stuff! |
+
 ### Part 2.
 
 Following exploration and reflection from Part 1, finish building your interactive system, and demonstrate it in use with a video.
 
 **\*\*\*Include a short video demonstrating the finished result.\*\*\***
+
+#### Summary
+
+Based on user feedback and exploration of what MediaPipe does well & not so well, we decided to build a simple balloon.
+
+[Demo video](https://youtu.be/vyeFcWQE9fc)
+
+#### Balloon Game Rules / Console Log
+
+***Gestures***
+- **POINT (index finger only)** → Pop **red** balloons  
+- **OPEN PALM (all fingers extended)** → Grab **blue** balloons  
+
+
+***Rule Table***
+
+| **Balloon Color** | **Required Gesture** | **Action** | **Points** | **Penalty** | **User Instructions** |
+|--------------------|----------------------|-------------|-------------|------------------------|------------|
+| **Red** | ☝️ **POINT** (index finger only) | Pop | **+3** | -5 | Only red balloons should be popped with the point gesture. |
+| **Blue** | ✋ **OPEN PALM** (all fingers extended) | Grab | **+3** | -5 | Only blue balloons should be grabbed with the palm gesture. |
+| **Black** | Avoid | Avoid | **0** | -5 if touched or acted on | Black balloons are traps—don’t pop or grab them. |
+
+***Game Controls***
+
+| **Action** | **Key** | **Description** |
+|-------------|----------|-----------------|
+| Quit game | `q` | Exit the game |
+| Restart game | `r` | Restart from the beginning |
+| Pause game | `p` | Pause the game |
+
