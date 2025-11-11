@@ -1,8 +1,7 @@
 # Distributed Interaction
 
-**NAMES OF COLLABORATORS HERE**
-
-For submission, replace this section with your documentation!
+#### Collaborators: Charlotte Lin (hl2575), Zoe Tseng (yzt2), Le-En Huang (lh764) 
+Use of AI for this lab: Claude Sonnet4 for image creation and debugging instructions for the code.
 
 ---
 
@@ -58,6 +57,106 @@ mosquitto_pub -h farlab.infosci.cornell.edu -p 1883 -t 'IDD/test/yourname' -m 'H
 ![MQTT Explorer showing messages](imgs/MQTT-explorer.png)
 
 **💡 Brainstorm 5 ideas for messaging between devices**
+
+### ✅ Idea 1: Distributed Game Hub
+
+The **Distributed Game Hub** is a multi-device system where each Raspberry Pi acts as a player station. Users can join simple, fast-paced mini-games such as:
+
+- Rock–Paper–Scissors  
+- Reaction-Time Challenge  
+- Hot Potato  
+- Quick-Tap Duel  
+
+#### 🔧 How It Works
+- Each Pi provides input through buttons, a joystick, or gesture sensors.
+- Player actions are published to shared MQTT topics (e.g., `hub/game/actions`).
+- A referee Pi (or distributed logic) listens to incoming actions, evaluates outcomes, and broadcasts results.
+- All Pis update their screens at the same time to reflect the final game state.
+
+#### ⭐ Why This Idea
+This idea is a strong example of distributed interaction because it demonstrates:
+- Real-time messaging between devices  
+- Coordinated state synchronization  
+- Fast event processing  
+- Multi-user participation across separate devices  
+
+The Game Hub can be easily extended by adding new games or input types.
+
+### ✅ Idea 2: Real-Time Voting & Polling System
+
+The **Real-Time Voting System** creates a distributed polling environment across multiple Raspberry Pis. Any device can start a vote, and all Pis instantly receive the poll information.
+
+#### 🔧 How It Works
+- One Pi publishes a poll question to a shared topic (e.g., `hub/vote/start`).
+- All Pis display the voting options to their users.
+- Each Pi publishes its vote to a corresponding topic such as `hub/vote/player3`.
+- A tally Pi collects all votes, counts them, and broadcasts the final result.
+- Every device displays the outcome of the vote in real time.
+
+#### ⭐ Why This Idea
+The voting system demonstrates:
+- Message aggregation from multiple devices  
+- Shared state updated through MQTT  
+- Distributed consensus building  
+- Real-time device-to-device coordination  
+
+This model resembles real-world systems such as collaborative panels, meeting polls, or smart-home decision nodes.
+
+### ✅ Idea 3: Shared To-Do / Household Chore Board
+
+The **Shared To-Do Board** is a distributed system where each Raspberry Pi represents a different roommate or household member. Each person can add, update, or complete tasks on their own Pi, and every update is instantly broadcast to all other devices. A central dashboard Pi displays the combined household task list, making it easy to track chores, shared responsibilities, and ongoing tasks.
+
+#### 🔧 How It Works
+- Each Pi allows the user to manage their own tasks (add, complete, delete, update status).
+- Task updates are published to shared MQTT topics (e.g., `home/todo/player3/update`).
+- A dashboard Pi subscribes to all task topics and maintains an aggregated list of everyone's chores.
+- All Pis receive updates in real time and refresh their screens to show the current shared state.
+
+#### ⭐ Why This Idea
+This idea is practical and relevant for shared living environments because it demonstrates:
+- Real-time distributed state sharing  
+- Multi-device coordination for shared responsibilities  
+- A clear messaging pattern for updates, synchronization, and aggregation  
+- A useful real-world application (household chores, shared shopping lists, studio tasks)
+
+The system can be expanded with features such as due dates, reminders, notifications, or color-coded assignments.
+
+
+### ✅ Idea 4: Distributed Home Security & Activity Log
+
+The **Home Security Log System** gives each Raspberry Pi a specific role—monitoring motion, sound, door open/close, or user-triggered alerts. Events from all Pis are published and collected into a single timeline on a dashboard Pi.
+
+#### 🔧 How It Works
+- Each Pi detects or simulates a household event (e.g., motion detected, noise above threshold, door opened).
+- Events are published as messages to topics like `home/security/event`.
+- The dashboard Pi logs each event with a timestamp and displays an ongoing feed.
+- All Pis react to important alerts (e.g., flashing LED for “door opened”).
+
+#### ⭐ Why This Idea
+This concept is realistic because it demonstrates:
+- Multi-device monitoring of different event types  
+- Distributed event publishing and centralized logging  
+- Basic alerting and notification mechanisms  
+- Scalable design mirroring real smart-home systems  
+
+It can integrate actual sensors for an advanced version.
+
+
+### ✅ Idea 5: Multi-Desk Productivity & Focus Sync System
+
+The **Focus Sync System** places a Raspberry Pi on each friend’s desk, allowing everyone to share their current work mode (Deep Work, Light Work, Break). Each device displays not only the user’s status but also updates whenever friends switch modes, creating a gentle, ambient way to stay connected and encourage each other during study sessions or work sprints.
+
+#### 🔧 How It Works
+- Each Pi has simple inputs for switching modes (Deep Work / Light Work / Break).
+- When a user updates their mode, the Pi publishes a message to `team/focus/userX`.
+- All Pis show a synchronized view of everyone’s modes (e.g., LEDs, icons, or color themes).
+- Optional: When a friend switches to **Deep Work**, others’ Pis can show a short encouraging message like “Charlotte started focusing — join in!”
+
+#### ⭐ Why Multiple Pis Are Needed
+- Friends are physically located at **different desks or rooms**, so each Pi provides local, ambient feedback.
+- A single Pi cannot represent multiple users across different locations.
+- Multiple devices create a **distributed encouragement network**, where each person’s focus status boosts motivation for the whole group.
+- This mirrors real-world multi-desk setups, study groups, or remote collaboration environments.
 
 ---
 
@@ -127,56 +226,88 @@ Hold colored objects near sensor to change your pixel!
 
 ## Part C: Make Your Own
 
-**Requirements:**
-- 3+ people, 3+ Pis
-- Each Pi contributes sensor input via MQTT
-- Meaningful or fun interaction
+## **1. Project Description**
 
-**Ideas:**
+A fun interactive game where a **central moderator Pi** runs the game logic and each player interacts with their own Raspberry Pi equipped with an ADPS sensor or buttons.  
 
-**Sensor Fortune Teller**
-- Each Pi sends 0-255 from different sensor
-- Server generates fortunes from combined values
+Players can choose between **two modes**:  
 
-**Frankenstories**
-- Sensor events → story elements (not text!)
-- Red = danger, gesture up = climbed, distance <10cm = suddenly
+1. **`Hot Potato`** : 3 Raspberry Pis, each assigned to one player: Player 1, Player 2, Player 3. Pis are connected via a simple network (e.g., using sockets, MQTT, or a simple shared server). One Pi starts with the “hot potato.”
 
-**Distributed Instrument**
-- Each Pi = one musical parameter
-- Only works together
+3. **`Rock Paper Scissors`** : 
 
-**Others:** Games, presence display, mood ring
+---
 
-### Deliverables
+### `Hot Potato` Mode
 
-Replace this README with your documentation:
+1. Moderator starts the game → publishes `game/mode = hot_potato`.  
+2. Potato starts with a random player → publishes `game/state = player_X_has_potato`.  
+3. Players “pass” the potato by waving hand near the sensor → publishes `game/player/{id}/action = pass`.  
+4. Moderator Pi tracks who currently has the potato and the timer.  
+5. When timer ends → the player holding the potato loses → publishes `game/winner`.  
 
-**1. Project Description**
-- What does it do? Why interesting? User experience?
+---
 
-**2. Architecture Diagram**
-- Hardware, connections, data flow
-- Label input/computation/output
+### `Rock Paper Scissors` Mode
 
-**3. Build Documentation**
-- Photos of each Pi + sensors
-- MQTT topics used
-- Code snippets with explanations
+1. Moderator starts → publishes `game/mode = rps`.  
+2. Each player selects their move via sensor/button → publishes `game/player/{id}/action = rock/paper/scissors`.  
+3. Moderator Pi collects all moves → computes winner → publishes `game/winner`.  
+4. Players’ Pis display winner feedback (LEDs, sound, etc.).  
 
-**4. User Testing**
-- **Test with 2+ people NOT on your team**
-- Photos/video of use
-- What did they think before trying?
-- What surprised them?
-- What would they change?
 
-**5. Reflection**
-- What worked well?
-- Challenges with distributed interaction?
-- How did sensor events work?
-- What would you improve?
+## 2. Architecture Diagram
 
+Hardware
+
+Connections
+
+Data flow
+
+Label input/computation/output
+
+
+## **3. Build Documentation**
+
+Photos of each Pi + sensors
+
+MQTT topics used
+
+Code snippets with explanations
+
+## **4. User Testing**
+
+Test with 2+ people NOT on your team
+
+Photos/video of use
+
+What did they think before trying?
+
+What surprised them?
+
+What would they change?
+
+## **5. Reflection**
+
+**What worked well?**  
+- MQTT made communication between multiple Pis seamless.  
+- Real-time updates for game state worked reliably.  
+- Both game modes were intuitive and engaging for players.  
+
+**Challenges with distributed interaction**  
+- Ensuring all Pis stayed synchronized during fast-paced actions (like Hot Potato).  
+- Handling delayed or missed MQTT messages in some network conditions.  
+- Coordinating multiple sensor inputs simultaneously required careful timing logic.  
+
+**How did sensor events work?**  
+- ADPS sensors/buttons reliably triggered player actions.  
+- Occasional missed triggers required debouncing logic or repeated reads.  
+- Sensor input mapping to MQTT messages was straightforward and effective.  
+
+**What would you improve?**  
+- Add feedback LEDs or sounds for each player for better engagement.  
+- Implement message acknowledgment or retries to reduce missed events.  
+- Create a visual scoreboard/dashboard to track scores and rounds.
 ---
 
 ## Code Files
