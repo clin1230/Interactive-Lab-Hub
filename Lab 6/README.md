@@ -162,6 +162,9 @@ The **Focus Sync System** places a Raspberry Pi on each friend’s desk, allowin
 
 ## Part B: Collaborative Pixel Grid
 
+<details>
+	<summary><strong>Instructions (Click to Expand)</strong></summary>
+
 Each Pi = one pixel, controlled by RGB sensor, displayed in real-time grid.
 
 **Architecture:** `Pi (sensor) → MQTT → Server → Web Browser`
@@ -219,6 +222,8 @@ python pixel_grid_publisher.py
 Hold colored objects near sensor to change your pixel!
 
 ![Pixel grid with two devices](imgs/two-devices-grid.png)
+
+</details>
 
 **📸 Include: Screenshot of grid + photo of your Pi setup**
 
