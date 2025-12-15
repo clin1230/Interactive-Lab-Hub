@@ -275,8 +275,11 @@ Quick summary:
 Press `Ctrl+C` to exit gracefully.
 
 ## File Structure
+
 <details>
 <summary>Click to expand file structure</summary>
+
+
 ```
 Final Project/
 ├── gesture_dj.py       # Main application with display and web
@@ -294,16 +297,22 @@ Final Project/
 ├── setup.sh            # Setup script
 ├── README.md           # This file
 ├── tracks/             # MP3 track files
-│   └── track01-10.mp3
-└── effects/            # Sound effect files
-    ├── beep.mp3
-    ├── click.mp3
-    ├── swoosh.mp3
-    ├── scratch1.mp3
-    ├── scratch2.mp3
-    ├── scratch3.mp3
-    └── scratch4.mp3
+│   ├── README.md
+│   └── track01.mp3 through track10.mp3
+├── effects/            # Sound effect files
+│   ├── README.md
+│   ├── beep.mp3        # Track change sound
+│   ├── click.mp3       # Volume change sound
+│   ├── swoosh.mp3      # Theme change sound
+│   ├── scratch1.mp3    # DJ scratch effects
+│   ├── scratch2.mp3
+│   ├── scratch3.mp3
+│   └── scratch4.mp3
+└── web/                # Web interface files
+    ├── index.html      # Main visualization page
+    └── static/         # CSS, JS, and other static assets
 ```
+
 </details>
 
 ## System Architecture
