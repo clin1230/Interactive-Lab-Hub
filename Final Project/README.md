@@ -9,9 +9,10 @@ A multi-modal DJ controller for Raspberry Pi that uses gesture sensors, touch in
 
 ## 📹 Demo Video
 
-<a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="400"></a>
-*▶️ Click above to watch someone using Gesture DJ!*
+<a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="500"></a>
 
+<a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>
+*▶️ Click above to watch someone using Gesture DJ!*
 
 ## 📸 Project Photos
 
@@ -260,8 +261,9 @@ python gesture_dj.py --web --no-browser
 
 ### Quick Reference
 
-**All controls are detailed in the [Features](#features) section above.** Quick summary:
+**All controls are detailed in the [Features](#features) section above.** 
 
+Quick summary:
 - **APDS Gestures**: Swipe RIGHT/LEFT (tracks), UP/DOWN (volume)
 - **MPR121 Touch**: Pads 0-9 (tracks), Pad 10 (play/pause), Pad 11 (stop)
 - **Voice**: Say "play" or "pause" (plus alternatives)
@@ -272,7 +274,8 @@ python gesture_dj.py --web --no-browser
 Press `Ctrl+C` to exit gracefully.
 
 ## File Structure
-
+<details>
+<summary>Click to expand file structure</summary>
 ```
 Final Project/
 ├── gesture_dj.py       # Main application with display and web
@@ -300,11 +303,11 @@ Final Project/
     ├── scratch3.mp3
     └── scratch4.mp3
 ```
+</details>
 
 ## System Architecture
 
 ![Decision Path Selection Flow-2025-12-15-030217](https://hackmd.io/_uploads/H1MfoeazWx.png)
-
 
 ## Module Descriptions
 
@@ -463,9 +466,13 @@ See `requirements.txt` for full list. Key dependencies:
 
 ### Design Process
 
-#### Initial Idea
+<details>
+<summary>Click to expand Initial idea </summary>
 <img src="https://hackmd.io/_uploads/SkhPiR6Mbe.jpg" alt="Gesture DJ Device" width="300">
-*Early concept for the Gesture DJ*
+    
+Early concept for the Gesture DJ
+    
+</details>details>
 
 #### Prototype Iterations
 
@@ -475,15 +482,15 @@ See `requirements.txt` for full list. Key dependencies:
 | **v2** | Removed MediaPipe (conflicted with APDS) + Added voice control for play/pause + APDS + Removed camera + Added web interface |
 | **v3 (Current)** | Re-added MediaPipe for UI theme switching & scratch effects + Voice control + APDS + MPR121 touch pads + Web interface + PiTFT display + Camera (for hand tracking) |
 
-#### Enclosure Design
+#### Physical Device Enclosure Design
 <!-- Add photos of your physical enclosure design process -->
 | Stage | Photo |
 |-------|-------|
-| CAD/Design | <img src="https://hackmd.io/_uploads/rJglpA6fWl.png" width="300"> |
-| Laser Cutting |  <img src="https://hackmd.io/_uploads/SkILnRTfZl.png" width="300"> |
+| Design sketch | ![Screenshot 2025-12-15 at 14.27.05](https://hackmd.io/_uploads/HktUWkCfbl.png) |
+| CAD/Design | <img src="https://hackmd.io/_uploads/rJglpA6fWl.png" width="500"> |
+| Laser Cutting | ![IMG_1635 (1)](https://hackmd.io/_uploads/BkuyXkRfZg.jpg)|
 | Assembly | ![Assembly](YOUR_PHOTO_URL) |
 | Finished | ![Finished](YOUR_PHOTO_URL) |
-
 
 ## Reflection
 - **user voice input** : We didn't originally plan to include voice input in our device. During the functional check, Professor Ju suggested adding voice control for music playback, such as play and pause commands. We ran some trials with voice input and speech recognition, and initially it seemed to work pretty well. However, we hadn't really thought about background noise and other people talking nearby. As a result, at the final presentation, sometimes the microphone struggled to pick up voice commands accurately and respond quickly because of all the ambient sound in the room.
@@ -492,6 +499,6 @@ See `requirements.txt` for full list. Key dependencies:
 
 - **user gesture recognition (media pipe)** : MediaPipe hand tracking was one of the most challenging parts of our project. Initially, we tried to use it for play/pause control, but it conflicted with the APDS gesture sensor. We ended up removing MediaPipe entirely to simplify the system. But later, we added it back but with a completely different purpose: UI theme switching (palm/fist gestures) and DJ scratch sound effects (peace sign). The most difficult technical challenge was making MediaPipe work simultaneously with all the other sensors (APDS, MPR121, voice) without conflicts. We had to carefully design the event handling system so that each input method had distinct responsibilities and wouldn't interfere with each other, which took us a lot of time working on multiple iterations of testing and debugging to ensure smooth multi-modal interaction.
 
-- **web interface** :
+- **web interface** : Initially, the web interface was just a backup plan. We designed it only as a visualization tool to give users clearer visual feedback. However, when testing with the PiTFT display, we realized it alone wasn't enough for users to easily see what was happening or interact with the device effectively. After a few design iterations, we settled on a neon theme for the interface to align with the DJ aesthetic of our project. We also added gesture control to let users switch between light and dark themes, giving them the flexibility to adjust the display based on their environment and personal preference without needing to navigate through menus.
 
-- **physical device design** : 
+- **physical device design** : For the physical design, our vision was to create a DJ board aesthetic using laser-cut wooden panels assembled into a box-like structure. We wanted the device to feel like an actual DJ controller, which would make the interaction more intuitive and engaging. The main challenge we faced was making it immediately clear to users where and how to interact with the device. Since gesture sensors and other components aren't as visually obvious as physical buttons or knobs, we had to carefully consider the placement of components and add visual cues like labels, icons, or designated interaction zones to guide users toward the right areas and help them understand which gestures to use. Looking ahead, there are many things we'd like to improve. For instance, the decorative elements on the DJ panel could actually be functional instead of just decorations, they could serve as interactive controls.
