@@ -12,6 +12,7 @@ A multi-modal DJ controller for Raspberry Pi that uses gesture sensors, touch in
 <a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="500"></a>
 
 <a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>
+
 *▶️ Click above to watch someone using Gesture DJ!*
 
 ## 📸 Project Photos
@@ -472,7 +473,7 @@ See `requirements.txt` for full list. Key dependencies:
     
 Early concept for the Gesture DJ
     
-</details>details>
+</details>
 
 #### Prototype Iterations
 
@@ -483,14 +484,12 @@ Early concept for the Gesture DJ
 | **v3 (Current)** | Re-added MediaPipe for UI theme switching & scratch effects + Voice control + APDS + MPR121 touch pads + Web interface + PiTFT display + Camera (for hand tracking) |
 
 #### Physical Device Enclosure Design
-<!-- Add photos of your physical enclosure design process -->
 | Stage | Photo |
 |-------|-------|
-| Design sketch | ![Screenshot 2025-12-15 at 14.27.05](https://hackmd.io/_uploads/HktUWkCfbl.png) |
-| CAD/Design | <img src="https://hackmd.io/_uploads/rJglpA6fWl.png" width="500"> |
-| Laser Cutting | ![IMG_1635 (1)](https://hackmd.io/_uploads/BkuyXkRfZg.jpg)|
-| Assembly | ![Assembly](YOUR_PHOTO_URL) |
-| Finished | ![Finished](YOUR_PHOTO_URL) |
+| Design sketch | <img src="https://hackmd.io/_uploads/HktUWkCfbl.png" width="600"> |
+| CAD/Design | <img src="https://hackmd.io/_uploads/rJglpA6fWl.png" width="600"> |
+| Laser Cutting | <img src="https://hackmd.io/_uploads/BkuyXkRfZg.png" width="600"> |
+| Finished |  <img src="https://hackmd.io/_uploads/B1o4Vy0z-l.png" width="600"> |
 
 ## Reflection
 - **user voice input** : We didn't originally plan to include voice input in our device. During the functional check, Professor Ju suggested adding voice control for music playback, such as play and pause commands. We ran some trials with voice input and speech recognition, and initially it seemed to work pretty well. However, we hadn't really thought about background noise and other people talking nearby. As a result, at the final presentation, sometimes the microphone struggled to pick up voice commands accurately and respond quickly because of all the ambient sound in the room.
