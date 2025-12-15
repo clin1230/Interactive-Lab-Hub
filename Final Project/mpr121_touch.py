@@ -1,6 +1,8 @@
 """
 MPR121 Touch Sensor Module
 Handles capacitive touch input for track selection (1-10)
+
+Owner: Zoe Tseng (yzt2), Charlotte Lin (hl2575)
 """
 
 import time
@@ -131,4 +133,3 @@ if __name__ == "__main__":
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nStopped")
-

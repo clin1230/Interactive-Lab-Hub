@@ -14,42 +14,47 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # 1. Create virtual environment
-echo "[1/5] Creating Python virtual environment..."
-if [ ! -d ".venv" ]; then
-    python3 -m venv .venv
+echo "[1/6] Creating Python virtual environment..."
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
     echo "      Virtual environment created."
 else
     echo "      Virtual environment already exists."
 fi
 
 # Activate virtual environment
-source .venv/bin/activate
+source venv/bin/activate
 
-# 2. Install Python dependencies
+# 2. Upgrade pip
 echo ""
-echo "[2/5] Installing Python dependencies..."
+echo "[2/6] Upgrading pip..."
 pip install --upgrade pip
+
+# 3. Install Python dependencies
+echo ""
+echo "[3/6] Installing Python dependencies..."
 pip install -r requirements.txt
 
-# 3. Install lgpio (required for Raspberry Pi 5)
+# 4. Install lgpio (required for Raspberry Pi 5)
 echo ""
-echo "[3/5] Installing lgpio for Raspberry Pi 5..."
+echo "[4/6] Installing lgpio for Raspberry Pi 5..."
 pip install lgpio 2>/dev/null || echo "      lgpio already installed or not needed."
 
-# 4. Download Vosk speech recognition model
+# 5. Download Vosk speech recognition model
 echo ""
-echo "[4/5] Downloading Vosk speech recognition model..."
+echo "[5/6] Downloading Vosk speech recognition model..."
 VOSK_MODEL_PATH="$HOME/.cache/vosk/vosk-model-small-en-us-0.15"
 if [ ! -d "$VOSK_MODEL_PATH" ]; then
+    echo "      Downloading model (this may take a minute)..."
     python3 -c "from vosk import Model; Model(lang='en-us')" 2>/dev/null || echo "      Model will download on first run."
     echo "      Vosk model downloaded."
 else
     echo "      Vosk model already cached."
 fi
 
-# 5. Create directories and placeholder files
+# 6. Create directories and placeholder files
 echo ""
-echo "[5/5] Setting up project directories..."
+echo "[6/6] Setting up project directories..."
 mkdir -p tracks
 mkdir -p effects
 
@@ -77,7 +82,7 @@ Place your 10 MP3 track files here with the following naming:
 
 ## Track Guidelines:
 - Format: MP3
-- Length: 10-60 seconds (shorter is better for DJ loops)
+- Length: 10-60 seconds works well for DJ loops
 - Quality: 128kbps or higher
 - License: Royalty-free or Creative Commons
 EOF
@@ -89,7 +94,11 @@ cat > effects/README.md << 'EOF'
 Place your sound effect MP3 files here:
 - beep.mp3 (track change confirmation)
 - click.mp3 (volume change confirmation)
-- whoosh.mp3 (effect toggle confirmation)
+- swoosh.mp3 (theme change sound effect)
+- scratch1.mp3 (DJ scratch effect)
+- scratch2.mp3 (DJ scratch effect)
+- scratch3.mp3 (DJ scratch effect)
+- scratch4.mp3 (DJ scratch effect)
 
 ## Suggested Effect Sources:
 - Freesound (https://freesound.org/)
@@ -98,7 +107,7 @@ Place your sound effect MP3 files here:
 
 ## Effect Guidelines:
 - Format: MP3
-- Length: 0.1-0.5 seconds (very short)
+- Length: 0.1-1.0 seconds (short and punchy)
 - Volume: Moderate (not too loud)
 - License: Royalty-free or Creative Commons
 EOF
@@ -110,14 +119,27 @@ echo "=========================================="
 echo ""
 echo "Directory structure:"
 echo "  tracks/     - Place 10 MP3 tracks (track01.mp3 - track10.mp3)"
-echo "  effects/    - Place sound effects (beep.mp3, click.mp3, whoosh.mp3)"
+echo "  effects/    - Place sound effects (beep.mp3, click.mp3, swoosh.mp3, scratch1-4.mp3)"
+echo ""
+echo "Hardware Setup:"
+echo "  1. Enable I2C and SPI:"
+echo "     sudo raspi-config"
+echo "     -> Interface Options -> I2C -> Enable"
+echo "     -> Interface Options -> SPI -> Enable"
+echo ""
+echo "  2. Verify sensors:"
+echo "     sudo i2cdetect -y 1"
+echo "     (Should show 39 for APDS, 5a for MPR121)"
 echo ""
 echo "To run the Gesture DJ:"
 echo "  1. Activate virtual environment:"
-echo "     source .venv/bin/activate"
+echo "     source venv/bin/activate"
 echo ""
 echo "  2. Run the application:"
 echo "     python gesture_dj.py"
+echo ""
+echo "  3. Run with web visualization:"
+echo "     python gesture_dj.py --web"
 echo ""
 echo "Controls:"
 echo "  APDS-9960 Gestures:"
@@ -134,5 +156,10 @@ echo ""
 echo "  Voice Commands:"
 echo "    - Say 'play':  Start playback"
 echo "    - Say 'pause': Pause playback"
+echo ""
+echo "  Hand Gestures (camera required):"
+echo "    - Open Palm (5 fingers):   Light theme (hold 2.5s)"
+echo "    - Closed Fist (0 fingers): Dark theme (hold 2.5s)"
+echo "    - Peace Sign (2 fingers):  DJ scratch effect (instant)"
 echo ""
 echo "Done!"
