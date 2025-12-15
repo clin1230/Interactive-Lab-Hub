@@ -9,11 +9,13 @@ A multi-modal DJ controller for Raspberry Pi that uses gesture sensors, touch in
 
 ## 📹 Demo Video
 
-<a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="500"></a>
+*▶️ Click below to watch someone using Gesture DJ!*
 
-<a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>
-
-*▶️ Click above to watch someone using Gesture DJ!*
+| Video Description | Video link |
+|-------------------|------------|
+|Final Presentation |<a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="500"></a>|
+|Final Presentation | <a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>|
+|Final Presentation | https://youtube.com/shorts/9XZ2AFxADyA?feature=share
 
 ## 📸 Project Photos
 
@@ -27,7 +29,7 @@ A multi-modal DJ controller for Raspberry Pi that uses gesture sensors, touch in
 ### Web Interface Screenshots
 | Light Theme | Dark Theme |
 |-------------|------------|
-| ![Light Theme](YOUR_SCREENSHOT_URL) | <img src="https://hackmd.io/_uploads/Sy0avApfZe.png" alt="Dark Theme" width="300"> |
+| <img src="https://hackmd.io/_uploads/BJjHPxRMbe.png" alt="Dark Theme" width="500">| <img src="https://hackmd.io/_uploads/Sy0avApfZe.png" alt="Dark Theme" width="500"> |
 
 
 ## Deliverables
