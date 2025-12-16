@@ -14,8 +14,8 @@ A multi-modal DJ controller for Raspberry Pi that uses gesture sensors, touch in
 | Video Description | Video link |
 |-------------------|------------|
 |Final Presentation |<a href="https://youtube.com/shorts/_Esceg73g3c"><img src="https://img.youtube.com/vi/_Esceg73g3c/hqdefault.jpg" alt="Demo Video" width="500"></a>|
-|Final Presentation | <a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>|
-|Final Presentation | https://youtube.com/shorts/9XZ2AFxADyA?feature=share
+|Switch tracks with `ADPS sensor` + Choose tracks with `MPR121 touch sensor` + Control UI and Sound effects with `MediaPipe`| <a href="https://youtube.com/shorts/_wjvhvSJUlQ"><img src="https://img.youtube.com/vi/_wjvhvSJUlQ/hqdefault.jpg" alt="Demo Video" width="500"></a>|
+|Details on `Media pipe` gestures controls| https://youtube.com/shorts/9XZ2AFxADyA?feature=share
 
 ## 📸 Project Photos
 
